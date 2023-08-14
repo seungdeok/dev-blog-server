@@ -1,0 +1,31 @@
+service: dev-blog-server
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-northeast-2
+  stage: ${opt:stage, 'dev'}
+  ecr:
+    images:
+      dev-blog-server:
+        path: ./
+        # platform: linux/amd64
+
+functions:
+  api:
+    # intel에서는 architecture 삭제
+    # architecture: arm64
+    image:
+      name: dev-blog-server
+      command:
+        - dist/lambda.handler
+      entryPoint:
+        - 'lambda-entrypoint.sh'
+    events:
+      - http:
+          method: any
+          path: '{any+}'
+          cors: true
