@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { Logger, VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
-import { PORT } from './config';
+import { PORT } from './config/config';
 
 const globalPrefix = 'api';
 const versionPrefix = 'v';
