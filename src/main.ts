@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger, VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { PORT } from './config/config';
 
@@ -26,6 +27,16 @@ export const getApp = async () => {
 
 async function bootstrap() {
   const app = await getApp();
+
+  const config = new DocumentBuilder()
+    .setTitle('Dev Blog API')
+    .setDescription('Dev Blog 개발을 위한 API 문서입니다.')
+    .setVersion('1.0')
+    .addCookieAuth('connect.sid')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
   await app.listen(PORT);
   Logger.log(
     `🚀 Application is running on: http://localhost:${PORT}/${globalPrefix}/${versionPrefix}${defaultVersion}`,
