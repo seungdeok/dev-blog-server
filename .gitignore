@@ -36,6 +36,7 @@ lerna-debug.log*
 
 #SERVERLESS STUFF
 .serverless
+serverless.yaml
 
 #ENV
 .env
