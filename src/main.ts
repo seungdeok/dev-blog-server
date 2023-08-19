@@ -12,7 +12,9 @@ const defaultVersion = '1';
 export const getApp = async () => {
   const app = await NestFactory.create(AppModule);
 
+  // security
   app.use(helmet());
+  app.enableCors();
 
   app.setGlobalPrefix(globalPrefix);
 
