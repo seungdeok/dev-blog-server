@@ -8,7 +8,7 @@ import {
 
 @Entity({ schema: 'dev-blog-db', name: 'post' })
 export class Post {
-  @PrimaryGeneratedColumn({ name: 'id' })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
   @Column('int', { name: 'category_id' })

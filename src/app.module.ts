@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostModule } from './post/post.module';
 import { Post } from './post/entities/post.entity';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { Post } from './post/entities/post.entity';
       inject: [ConfigService],
     }),
     PostModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
