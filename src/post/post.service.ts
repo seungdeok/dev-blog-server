@@ -10,37 +10,33 @@ export class PostService {
   constructor(
     @InjectRepository(Post) private postRepository: Repository<Post>,
   ) {}
-  private posts: Array<Post> = [];
-  private id = 0;
 
-  create(createPostDto: CreatePostDto) {
-    const createdAt = new Date();
-    this.posts.push({
-      id: ++this.id,
-      ...createPostDto,
-      created_at: createdAt,
-      modified_at: createdAt,
-    });
+  async create(createPostDto: CreatePostDto) {
+    const post = new Post();
+    post.title = createPostDto.title;
+    post.content = createPostDto.content;
+    post.category_id = createPostDto.category_id;
+
+    await this.postRepository.save(post);
   }
 
   async findAll(): Promise<Post[]> {
     return await this.postRepository.find();
   }
 
-  findOne(id: number) {
-    const found = this.posts.find((u) => u.id === id);
-    if (!found) throw new NotFoundException();
-    return found;
+  async findOne(id: number) {
+    const returned = await this.postRepository.findOne({ where: { id } });
+    if (!returned) throw new NotFoundException();
+    return returned;
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    const found = this.findOne(id);
-    this.remove(id);
-    this.posts.push({ ...found, ...updatePostDto, modified_at: new Date() });
+  async update(id: number, updatePostDto: UpdatePostDto) {
+    await this.findOne(id);
+    await this.postRepository.update({ id }, { ...updatePostDto });
   }
 
-  remove(id: number) {
-    this.findOne(id);
-    this.posts = this.posts.filter((u) => u.id !== id);
+  async remove(id: number) {
+    await this.findOne(id);
+    await this.postRepository.delete({ id });
   }
 }

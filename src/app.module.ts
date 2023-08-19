@@ -23,6 +23,7 @@ import { Post } from './post/entities/post.entity';
         keepConnectionAlive: true,
         charset: 'utf8mb4_general_ci',
         logging: true,
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),
