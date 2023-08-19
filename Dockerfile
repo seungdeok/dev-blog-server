@@ -1,10 +1,13 @@
 FROM public.ecr.aws/lambda/nodejs:18
 
+RUN npm install -g yarn
+
 COPY package*.json .
-RUN npm install
+COPY yarn.lock .
+RUN yarn install
 
-ADD dist ./dist
+COPY . .
 
-ENV NODE_ENV='production'
+RUN npm run build
 
 CMD ["dist/lambda.handler"]
