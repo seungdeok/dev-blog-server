@@ -1,7 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger, VersioningType } from '@nestjs/common';
-import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
+import csurf from 'csurf';
 import { AppModule } from './app.module';
 import { PORT } from './config/config';
 
@@ -15,6 +17,8 @@ export const getApp = async () => {
   // security
   app.use(helmet());
   app.enableCors();
+  app.use(cookieParser());
+  app.use(csurf({ cookie: true }));
 
   app.setGlobalPrefix(globalPrefix);
 
