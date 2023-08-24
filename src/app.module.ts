@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { PostModule } from './post/post.module';
 import { Post } from './post/entities/post.entity';
 import { CategoryModule } from './category/category.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { CategoryModule } from './category/category.module';
     }),
     PostModule,
     CategoryModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
