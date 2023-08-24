@@ -14,6 +14,12 @@ export class Post {
   @Column('int', { name: 'category_id' })
   category_id: number;
 
+  @Column('varchar', { name: 'draft' })
+  draft: string;
+
+  @Column('varchar', { name: 'tags' })
+  tags: string;
+
   @Column('varchar', { name: 'title' })
   title: string;
 

@@ -16,6 +16,8 @@ export class PostService {
     post.title = createPostDto.title;
     post.content = createPostDto.content;
     post.category_id = createPostDto.category_id;
+    post.tags = createPostDto.tags;
+    post.draft = createPostDto.draft;
 
     await this.postRepository.save(post);
   }
