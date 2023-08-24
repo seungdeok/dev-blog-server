@@ -2,10 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { Logger, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-import cookieParser from 'cookie-parser';
-import csurf from 'csurf';
+// import cookieParser from 'cookie-parser';
+// import csurf from 'csurf';
 import { AppModule } from './app.module';
-import { PORT } from './config/config';
+import { PORT } from './config';
 
 const globalPrefix = 'api';
 const versionPrefix = 'v';
@@ -16,9 +16,9 @@ export const getApp = async () => {
 
   // security
   app.use(helmet());
-  app.enableCors();
-  app.use(cookieParser());
-  app.use(csurf({ cookie: true }));
+  app.enableCors({ credentials: true });
+  // app.use(cookieParser());
+  // app.use(csurf({ cookie: true }));
 
   app.setGlobalPrefix(globalPrefix);
 
