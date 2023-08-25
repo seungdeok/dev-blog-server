@@ -7,6 +7,7 @@ import {
 import { AuthLoginUserDto } from './dto/auth-login-user.dto';
 import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
+import { CognitoJwtVerifier } from 'aws-jwt-verify';
 
 @Injectable()
 export class AuthService {
@@ -55,5 +56,19 @@ export class AuthService {
         },
       });
     });
+  }
+
+  async verifyToken(token: string) {
+    const verifier = CognitoJwtVerifier.create({
+      userPoolId: this.userPool.getUserPoolId(),
+      tokenUse: 'access',
+      clientId: this.userPool.getClientId(),
+    });
+
+    const { sub, scope } = await verifier.verify(token);
+    return {
+      sub,
+      scope,
+    };
   }
 }
