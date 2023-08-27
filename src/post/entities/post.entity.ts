@@ -1,9 +1,12 @@
+import { Category } from 'src/category/entities/category.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity({ schema: 'dev-blog-db', name: 'post' })
@@ -13,6 +16,10 @@ export class Post {
 
   @Column('int', { name: 'category_id' })
   category_id: number;
+
+  @ManyToOne(() => Category, { eager: true })
+  @JoinColumn({ name: 'category_id' })
+  category: Category;
 
   @Column('varchar', { name: 'draft' })
   draft: string;
