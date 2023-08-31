@@ -28,10 +28,12 @@ export class PostController {
   findAll(
     @Query('page') page: string,
     @Query('categoryName') categoryName: string,
+    @Query('limit') limit: string,
   ) {
     return this.postService.findAll({
       page: Number(page) || 1,
       categoryName: categoryName || '',
+      limit: Number(limit) || 10,
     });
   }
 
