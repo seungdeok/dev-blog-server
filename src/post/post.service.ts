@@ -37,7 +37,8 @@ export class PostService {
         'post.modified_at',
         'category.id',
         'category.name',
-      ]);
+      ])
+      .orderBy('post.modified_at', 'DESC');
 
     if (findPostDto.categoryName) {
       query.andWhere('category.name = :categoryName', {
@@ -46,8 +47,8 @@ export class PostService {
     }
 
     const [list, total] = await query
-      .skip((findPostDto.page - 1) * 10)
-      .take(10)
+      .skip((findPostDto.page - 1) * findPostDto.limit)
+      .take(findPostDto.limit)
       .getManyAndCount();
 
     return {
