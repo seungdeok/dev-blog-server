@@ -1,12 +1,12 @@
-import { Category } from 'src/category/entities/category.entity';
+import { Tag } from 'src/tag/entities/tag.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 @Entity({ schema: 'dev-blog-db', name: 'post' })
@@ -14,18 +14,12 @@ export class Post {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column('int', { name: 'category_id' })
-  category_id: number;
-
-  @ManyToOne(() => Category, { eager: true })
-  @JoinColumn({ name: 'category_id' })
-  category: Category;
+  @ManyToMany(() => Tag, { cascade: true })
+  @JoinTable()
+  tags: Tag[];
 
   @Column('varchar', { name: 'draft' })
   draft: string;
-
-  @Column('varchar', { name: 'tags' })
-  tags: string;
 
   @Column('varchar', { name: 'title' })
   title: string;

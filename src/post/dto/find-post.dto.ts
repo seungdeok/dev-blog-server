@@ -1,5 +1,5 @@
 export class FindPostDto {
   page: number;
-  categoryName: string;
+  tagName: string;
   limit: number;
 }
