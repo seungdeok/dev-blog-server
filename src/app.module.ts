@@ -7,7 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostModule } from './post/post.module';
 import { Post } from './post/entities/post.entity';
-import { CategoryModule } from './category/category.module';
+import { TagModule } from './tag/tag.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -40,7 +40,7 @@ import { AuthModule } from './auth/auth.module';
       }),
     }),
     PostModule,
-    CategoryModule,
+    TagModule,
     AuthModule,
   ],
   controllers: [AppController],

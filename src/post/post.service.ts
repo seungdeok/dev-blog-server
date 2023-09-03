@@ -5,44 +5,51 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './entities/post.entity';
 import { FindPostDto } from './dto/find-post.dto';
+import { TagService } from 'src/tag/tag.service';
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectRepository(Post) private postRepository: Repository<Post>,
+    private readonly tagService: TagService,
   ) {}
 
   async create(createPostDto: CreatePostDto) {
-    const post = new Post();
-    post.title = createPostDto.title;
-    post.content = createPostDto.content;
-    post.category_id = createPostDto.category_id;
-    post.tags = createPostDto.tags;
-    post.draft = createPostDto.draft;
+    const newPost = new Post();
+    newPost.title = createPostDto.title;
+    newPost.content = createPostDto.content;
+    newPost.draft = createPostDto.draft;
+    newPost.tags = [];
 
-    await this.postRepository.save(post);
+    await Promise.all(
+      createPostDto.tags.map(async (tagName) => {
+        const newTag = await this.tagService.create({ name: tagName });
+        newPost.tags.push(newTag);
+      }),
+    );
+
+    return await this.postRepository.save(newPost);
   }
 
   async findAll(findPostDto: FindPostDto) {
     const query = this.postRepository
       .createQueryBuilder('post')
-      .leftJoinAndSelect('post.category', 'category')
+      .leftJoinAndSelect('post.tags', 'tags')
       .select([
         'post.id',
         'post.draft',
-        'post.tags',
         'post.title',
         'post.content',
         'post.created_at',
         'post.modified_at',
-        'category.id',
-        'category.name',
+        'tags.id',
+        'tags.name',
       ])
       .orderBy('post.modified_at', 'DESC');
 
-    if (findPostDto.categoryName) {
-      query.andWhere('category.name = :categoryName', {
-        categoryName: findPostDto.categoryName,
+    if (findPostDto.tagName) {
+      query.andWhere('tags.name = :tagName', {
+        tagName: findPostDto.tagName,
       });
     }
 
@@ -61,17 +68,16 @@ export class PostService {
   async findOne(id: number) {
     const returned = await this.postRepository
       .createQueryBuilder('post')
-      .leftJoinAndSelect('post.category', 'category')
+      .leftJoinAndSelect('post.tags', 'tags')
       .select([
         'post.id',
         'post.draft',
-        'post.tags',
         'post.title',
         'post.content',
         'post.created_at',
         'post.modified_at',
-        'category.id',
-        'category.name',
+        'tags.id',
+        'tags.name',
       ])
       .where('post.id = :id', { id })
       .getOne();
@@ -80,8 +86,26 @@ export class PostService {
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
-    await this.findOne(id);
-    await this.postRepository.update({ id }, { ...updatePostDto });
+    const post = await this.findOne(id);
+
+    await Promise.all(
+      post.tags.map(async ({ id: tagId }) => {
+        await this.tagService.remove(tagId);
+      }),
+    );
+
+    post.title = updatePostDto.title;
+    post.content = updatePostDto.content;
+    post.draft = updatePostDto.draft;
+
+    await Promise.all(
+      updatePostDto.tags.map(async (tagName) => {
+        const newTag = await this.tagService.create({ name: tagName });
+        post.tags.push(newTag);
+      }),
+    );
+
+    return await this.postRepository.save(post);
   }
 
   async remove(id: number) {
