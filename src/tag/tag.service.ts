@@ -20,7 +20,7 @@ export class TagService {
     if (!tag) {
       const newTag = new Tag();
       newTag.name = createTagDto.name;
-      await this.tagRepository.save(newTag);
+      return await this.tagRepository.save(newTag);
     }
 
     return tag;
@@ -38,11 +38,11 @@ export class TagService {
 
   async update(id: number, updateTagDto: UpdateTagDto) {
     await this.findOne(id);
-    await this.tagRepository.update({ id }, { ...updateTagDto });
+    return await this.tagRepository.update({ id }, { ...updateTagDto });
   }
 
   async remove(id: number) {
     await this.findOne(id);
-    await this.tagRepository.delete({ id });
+    return await this.tagRepository.delete({ id });
   }
 }
