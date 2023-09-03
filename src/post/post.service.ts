@@ -5,7 +5,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './entities/post.entity';
 import { FindPostDto } from './dto/find-post.dto';
-import { TagService } from 'src/tag/tag.service';
+import { TagService } from '../tag/tag.service';
 
 @Injectable()
 export class PostService {
@@ -88,15 +88,10 @@ export class PostService {
   async update(id: number, updatePostDto: UpdatePostDto) {
     const post = await this.findOne(id);
 
-    await Promise.all(
-      post.tags.map(async ({ id: tagId }) => {
-        await this.tagService.remove(tagId);
-      }),
-    );
-
     post.title = updatePostDto.title;
     post.content = updatePostDto.content;
     post.draft = updatePostDto.draft;
+    post.tags = [];
 
     await Promise.all(
       updatePostDto.tags.map(async (tagName) => {
@@ -110,6 +105,6 @@ export class PostService {
 
   async remove(id: number) {
     await this.findOne(id);
-    await this.postRepository.delete({ id });
+    return await this.postRepository.delete({ id });
   }
 }
