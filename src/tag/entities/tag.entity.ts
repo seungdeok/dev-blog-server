@@ -1,5 +1,4 @@
-import { Post } from '../../post/entities/post.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity({ schema: 'dev-blog-db', name: 'tag' })
 export class Tag {
